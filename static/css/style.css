@@ -1,0 +1,981 @@
+/* ============================================
+   IMMUNIDATA – Global Stylesheet
+   Navy + White, clean dashboard aesthetic
+   ============================================ */
+
+:root {
+    --navy:       #1a2744;
+    --navy-light: #243256;
+    --navy-mid:   #2e4080;
+    --accent:     #4a90d9;
+    --accent-2:   #5bb8f5;
+    --white:      #ffffff;
+    --off-white:  #f4f7fb;
+    --text:       #1e2d45;
+    --text-muted: #6b7fa3;
+    --border:     #dde4f0;
+    --card-shadow: 0 4px 24px rgba(26,39,68,0.10);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ---- NAVBAR ---- */
+.navbar {
+    background: var(--navy);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon { font-size: 1.4rem; }
+
+.logo-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--white);
+    letter-spacing: 0.5px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--white);
+    background: rgba(255,255,255,0.12);
+}
+
+/* ---- HERO ---- */
+.hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #1e5fa8 100%);
+    color: var(--white);
+    padding: 6rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 1rem;
+}
+
+.hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+}
+
+.hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.78);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(74,144,217,0.4);
+}
+
+.btn-primary:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(74,144,217,0.5);
+}
+
+/* Background shapes */
+.hero-bg-shapes { position: absolute; inset: 0; z-index: 1; }
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+    background: var(--white);
+}
+
+.shape-1 { width: 400px; height: 400px; top: -100px; right: -80px; }
+.shape-2 { width: 250px; height: 250px; bottom: -60px; left: 10%; }
+.shape-3 { width: 150px; height: 150px; top: 40%; right: 20%; }
+
+/* ---- KPI CARDS ---- */
+.kpi-section {
+    padding: 3.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.kpi-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 2rem 1.75rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(26,39,68,0.14);
+}
+
+.kpi-card:hover::before { opacity: 1; }
+
+.kpi-card.highlight {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: var(--white);
+    border-color: transparent;
+}
+
+.kpi-card.highlight .kpi-label { color: rgba(255,255,255,0.7); }
+.kpi-card.highlight .kpi-desc  { color: rgba(255,255,255,0.55); }
+
+.kpi-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.kpi-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
+
+.kpi-card.highlight .kpi-value { color: var(--white); }
+
+.kpi-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+}
+
+.kpi-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ---- DISEASES SECTION ---- */
+.diseases-section {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem;
+}
+
+.section-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+}
+
+.section-sub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.disease-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.disease-tag {
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    color: var(--navy);
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+}
+
+.disease-tag:hover {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+
+/* ---- FOOTER ---- */
+.footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    padding: 1.75rem 2rem;
+    margin-top: 4rem;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.footer p {
+    font-size: 0.82rem;
+}
+
+/* ============================================
+   LEVEL 1-B: MISSION STATEMENT PAGE
+   ============================================ */
+
+/* -- Divider -- */
+.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+}
+
+/* -- Section headings (shared) -- */
+.section-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+}
+
+.section-sub-text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 640px;
+}
+
+/* -- Mission block (purpose section) -- */
+.mission-block {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+.mission-icon {
+    font-size: 2.8rem;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 0.2rem;
+}
+
+.mission-text h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.85rem;
+}
+
+.mission-text p {
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.mission-text p:last-child { margin-bottom: 0; }
+
+/* -- How to use grid -- */
+.how-to-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.how-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.how-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(26,39,68,0.12);
+}
+
+.how-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    opacity: 0.5;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+}
+
+.how-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+}
+
+.how-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* -- Persona cards -- */
+.persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+}
+
+.persona-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s;
+}
+
+.persona-card:hover { transform: translateY(-3px); }
+
+/* Top section of card: avatar + name */
+.persona-info {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 1.75rem 1.25rem;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: var(--white);
+}
+
+.persona-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+/* Fix: avatar sits inside persona-info flex container */
+
+.persona-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.persona-role {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+}
+
+.persona-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.9);
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.73rem;
+    font-weight: 600;
+}
+
+/* Bottom section of card: goals + pain points */
+.persona-details {
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.detail-block h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+}
+
+.detail-block ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.detail-block ul li {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding-left: 0.85rem;
+    position: relative;
+}
+
+.detail-block ul li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+/* -- Team table -- */
+.team-table-wrap {
+    max-width: 600px;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 4rem 1.5rem 3.5rem; }
+    .kpi-section { padding: 2.5rem 1.25rem; }
+    .footer-inner { flex-direction: column; text-align: center; }
+}
+
+/* ---- SHARED TABLE STYLES (dùng cho các trang sau) ---- */
+.table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-size: 0.9rem;
+}
+
+thead {
+    background: var(--navy);
+    color: var(--white);
+}
+
+thead th {
+    padding: 0.9rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--off-white); }
+
+tbody td {
+    padding: 0.8rem 1.25rem;
+    color: var(--text);
+}
+
+/* ---- SHARED FORM STYLES ---- */
+.filter-form {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 160px;
+}
+
+.form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+}
+
+.form-group select,
+.form-group input {
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--off-white);
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    border-color: var(--accent);
+    background: var(--white);
+}
+
+.btn-filter {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 7px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+}
+
+.btn-filter:hover {
+    background: var(--navy-mid);
+    transform: translateY(-1px);
+}
+
+/* ---- PAGE HEADER (dùng chung) ---- */
+.page-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: var(--white);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+}
+
+.page-header p {
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* ============================================
+   LEVEL 2-A: VACCINATION RATES PAGE
+   ============================================ */
+
+/* -- Results summary bar -- */
+.results-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.results-badge {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.results-context {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* -- Coverage % colour badges -- */
+.pct-badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.pct-green  { background: #d1fae5; color: #065f46; }
+.pct-blue   { background: #dbeafe; color: #1e40af; }
+.pct-yellow { background: #fef9c3; color: #854d0e; }
+
+/* -- Empty state -- */
+.empty-state {
+    text-align: center;
+    padding: 3.5rem 2rem;
+    background: var(--white);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--text-muted);
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.empty-hint {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    opacity: 0.7;
+}
+
+/* ============================================
+   LEVEL 2-B: INFECTION BY ECONOMY PAGE
+   ============================================ */
+
+/* -- Economy group colour tags -- */
+.economy-tag {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.econ-high-income              { background: #dbeafe; color: #1e3a8a; }
+.econ-upper-middle-income      { background: #d1fae5; color: #064e3b; }
+.econ-lower-middle-income      { background: #fef9c3; color: #713f12; }
+.econ-low-income               { background: #fee2e2; color: #7f1d1d; }
+
+/* -- Cases per 100k colour badges -- */
+.per100k-badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.rate-high { background: #fee2e2; color: #7f1d1d; }   /* >= 10 per 100k  */
+.rate-mid  { background: #fef9c3; color: #713f12; }   /* 1 – 9.99        */
+.rate-low  { background: #d1fae5; color: #064e3b; }   /* < 1             */
+
+/* ============================================
+   LEVEL 3-A: BIGGEST IMPROVEMENT PAGE
+   ============================================ */
+
+/* -- Error banner -- */
+.error-banner {
+    background: #fee2e2;
+    border: 1.5px solid #fca5a5;
+    color: #7f1d1d;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+/* -- Improvement badges -- */
+.improvement-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.impr-high { background: #d1fae5; color: #064e3b; }   /* >= 50pp */
+.impr-mid  { background: #dbeafe; color: #1e3a8a; }   /* 20–49pp */
+.impr-low  { background: #f3f4f6; color: #374151; }   /* < 20pp  */
+
+/* -- Progress bar -- */
+.progress-wrap {
+    background: var(--border);
+    border-radius: 999px;
+    height: 8px;
+    width: 120px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    min-width: 4px;
+    transition: width 0.4s ease;
+}
+
+/* ============================================
+   LEVEL 3-B: ABOVE AVERAGE INFECTION PAGE
+   ============================================ */
+
+/* -- Global average highlight cards -- */
+.avg-highlight-row {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.avg-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
+    box-shadow: var(--card-shadow);
+    flex: 1;
+    min-width: 220px;
+}
+
+.avg-card.highlight {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    border-color: transparent;
+    color: var(--white);
+}
+
+.avg-icon { font-size: 2rem; line-height: 1; }
+
+.avg-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+
+.avg-card.highlight .avg-label { color: rgba(255,255,255,0.65); }
+
+.avg-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.avg-card.highlight .avg-value { color: var(--white); }
+
+.avg-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.avg-card.highlight .avg-sub { color: rgba(255,255,255,0.55); }
+
+/* -- Muted cell -- */
+.muted-cell { color: var(--text-muted); font-size: 0.88rem; }
+
+/* -- Above-by badges -- */
+.above-badge {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.above-high { background: #fee2e2; color: #7f1d1d; }
+.above-mid  { background: #fef9c3; color: #713f12; }
+.above-low  { background: #f3f4f6; color: #374151; }
+
+/* ============================================
+   RELATED PAGES SECTION
+   ============================================ */
+.related-section {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+}
+
+.related-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.related-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+.related-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.related-btn {
+    display: inline-block;
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    color: var(--navy);
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.related-btn:hover {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   PERSONA REAL IMAGE
+   ============================================ */
+.persona-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 2px solid rgba(255,255,255,0.35);
+    flex-shrink: 0;
+}
