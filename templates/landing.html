@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImmuniData – Track Infectious Disease Trends</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">🧬</span>
+                <span class="logo-text">ImmuniData</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/above-average">Disease Trends</a></li>
+                <li><a href="/mission">Public Health Insights</a></li>
+                <li><a href="/infection-by-economy">Disease Comparison</a></li>
+                <li><a href="/vaccination-rates">Vaccination Coverage</a></li>
+                <li><a href="/mission">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-label">Global Immunisation Dashboard</p>
+            <h1 class="hero-title">Track Infectious<br>Disease Trends</h1>
+            <p class="hero-sub">Explore immunisation and infectious disease data through interactive visualisations and public health insights.</p>
+            <a href="/vaccination-rates" class="btn-primary">Explore Dashboard →</a>
+        </div>
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </section>
+
+    <!-- KPI CARDS -->
+    <section class="kpi-section">
+        <div class="kpi-grid">
+
+            <div class="kpi-card">
+                <div class="kpi-icon">📅</div>
+                <div class="kpi-value">{{ year_min }}–{{ year_max }}</div>
+                <div class="kpi-label">Data Coverage Period</div>
+                <div class="kpi-desc">Vaccination data spanning {{ year_max - year_min }} years of global records</div>
+            </div>
+
+            <div class="kpi-card highlight">
+                <div class="kpi-icon">💉</div>
+                <div class="kpi-value">{{ "{:,.0f}".format(total_doses / 1_000_000_000) }}B+</div>
+                <div class="kpi-label">Vaccine Doses Administered</div>
+                <div class="kpi-desc">Total doses recorded across all countries and disease types</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon">🌍</div>
+                <div class="kpi-value">{{ total_countries }}</div>
+                <div class="kpi-label">Countries Tracked</div>
+                <div class="kpi-desc">Nations contributing immunisation data to the global dataset</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon">🦠</div>
+                <div class="kpi-value">{{ "{:,.0f}".format(total_cases / 1_000_000) }}M+</div>
+                <div class="kpi-label">Total Cases Recorded</div>
+                <div class="kpi-desc">Reported cases of preventable infectious diseases worldwide</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- DISEASES SECTION -->
+    <section class="diseases-section">
+        <div class="section-inner">
+            <h2 class="section-title">Diseases We Track</h2>
+            <p class="section-sub">Our database covers the following preventable infectious diseases, with data sourced from WHO global immunisation records.</p>
+            <div class="disease-tags">
+                {% for disease in diseases %}
+                <span class="disease-tag">{{ disease }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="logo-text">🧬 ImmuniData</span>
+            <p>Data sourced from WHO Global Immunisation Records · Built for RMIT Python Programming Studio</p>
+        </div>
+    </footer>
+
+</body>
+</html>

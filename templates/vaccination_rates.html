@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccination Rates – ImmuniData</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ======= NAVBAR ======= -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">🧬</span>
+                <span class="logo-text">ImmuniData</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/above-average">Disease Trends</a></li>
+                <li><a href="/mission">Public Health Insights</a></li>
+                <li><a href="/infection-by-economy">Disease Comparison</a></li>
+                <li><a href="/vaccination-rates" class="active">Vaccination Coverage</a></li>
+                <li><a href="/mission">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ======= HERO BANNER ======= -->
+    <section class="page-header">
+        <h1>Vaccination Rates</h1>
+        <p>Filter countries that have met the 90% vaccination target by antigen type, year, and region.</p>
+    </section>
+
+    <div class="page-content">
+
+        <!-- ======= FILTER FORM ======= -->
+        <section>
+            <h2 class="section-heading">🔍 Filter Data</h2>
+            <p class="section-sub-text">Select an antigen, year, and optionally a region to filter the results below.</p>
+
+            <form class="filter-form" method="GET" action="/vaccination-rates">
+
+                <!-- Dropdown: Antigen -->
+                <div class="form-group">
+                    <label for="antigen">Vaccine (Antigen)</label>
+                    <select name="antigen" id="antigen">
+                        {% for a in antigens %}
+                        <option value="{{ a['AntigenID'] }}"
+                            {% if a['AntigenID'] == sel_antigen %}selected{% endif %}>
+                            {{ a['name'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: Year -->
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <select name="year" id="year">
+                        {% for y in years %}
+                        <option value="{{ y }}"
+                            {% if y == sel_year %}selected{% endif %}>
+                            {{ y }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: Region (optional) -->
+                <div class="form-group">
+                    <label for="region">Region (Optional)</label>
+                    <select name="region" id="region">
+                        <option value="">All Regions</option>
+                        {% for r in regions %}
+                        <option value="{{ r['RegionID'] }}"
+                            {% if r['RegionID'] == sel_region %}selected{% endif %}>
+                            {{ r['region'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filter">Apply Filter</button>
+
+            </form>
+        </section>
+
+        <!-- ======= RESULTS SUMMARY ======= -->
+        <div class="results-summary">
+            <span class="results-badge">
+                {{ countries_met | length }} countries met the 90% target
+            </span>
+            <span class="results-context">
+                for <strong>{{ sel_antigen }}</strong> in <strong>{{ sel_year }}</strong>
+                {% if sel_region %} · Region filtered{% endif %}
+            </span>
+        </div>
+
+        <!-- ======= TABLE 1: Countries that met 90% ======= -->
+        <section>
+            <h2 class="section-heading">📋 Countries Meeting 90% Target</h2>
+            <p class="section-sub-text">
+                Countries where vaccination doses administered reached at least 90% of the target population.
+                Sorted from highest to lowest coverage percentage.
+            </p>
+
+            {% if countries_met %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Country</th>
+                            <th>Region</th>
+                            <th>Doses Administered</th>
+                            <th>Target Population</th>
+                            <th>Coverage %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in countries_met %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ row['country'] }}</strong></td>
+                            <td>{{ row['region'] }}</td>
+                            <td>{{ "{:,.0f}".format(row['doses']) }}</td>
+                            <td>{{ "{:,.0f}".format(row['target_num']) }}</td>
+                            <td>
+                                <span class="pct-badge
+                                    {% if row['pct'] >= 100 %}pct-green
+                                    {% elif row['pct'] >= 95 %}pct-blue
+                                    {% else %}pct-yellow{% endif %}">
+                                    {{ row['pct'] }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔎</div>
+                <p>No countries met the 90% target for the selected filters.</p>
+                <p class="empty-hint">Try selecting a different antigen, year, or remove the region filter.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ======= TABLE 2: Region summary ======= -->
+        <section>
+            <h2 class="section-heading">🌍 Summary by Region</h2>
+            <p class="section-sub-text">
+                Number of countries per region that met the 90% target, along with the average coverage rate.
+            </p>
+
+            {% if region_summary %}
+            <div class="table-wrap" style="max-width: 640px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>Countries Met Target</th>
+                            <th>Average Coverage %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in region_summary %}
+                        <tr>
+                            <td><strong>{{ row['region'] }}</strong></td>
+                            <td>{{ row['countries_met'] }}</td>
+                            <td>
+                                <span class="pct-badge
+                                    {% if row['avg_pct'] >= 100 %}pct-green
+                                    {% elif row['avg_pct'] >= 95 %}pct-blue
+                                    {% else %}pct-yellow{% endif %}">
+                                    {{ row['avg_pct'] }}%
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🌍</div>
+                <p>No regional data available for the selected filters.</p>
+            </div>
+            {% endif %}
+
+        </section>
+
+    </div><!-- end page-content -->
+
+
+    <!-- ======= RELATED PAGES ======= -->
+    <section class="related-section">
+        <div class="related-inner">
+            <span class="related-label">🔗 Explore Related Pages</span>
+            <div class="related-links">
+                <a href="/biggest-improvement" class="related-btn">Biggest Improvement →</a>
+                <a href="/above-average" class="related-btn">Disease Trends →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FOOTER ======= -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="logo-text">🧬 ImmuniData</span>
+            <p>Data sourced from WHO Global Immunisation Records · Built for RMIT Python Programming Studio</p>
+        </div>
+    </footer>
+
+</body>
+</html>

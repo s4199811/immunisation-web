@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Statement – ImmuniData</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ======= NAVBAR ======= -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">🧬</span>
+                <span class="logo-text">ImmuniData</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/above-average">Disease Trends</a></li>
+                <li><a href="/mission">Public Health Insights</a></li>
+                <li><a href="/infection-by-economy">Disease Comparison</a></li>
+                <li><a href="/vaccination-rates">Vaccination Coverage</a></li>
+                <li><a href="/mission" class="active">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ======= HERO BANNER ======= -->
+    <section class="page-header">
+        <h1>Our Mission</h1>
+        <p>ImmuniData aims to improve public understanding of infectious diseases and vaccination trends through accessible and interactive data visualisations.</p>
+    </section>
+
+    <div class="page-content">
+
+        <!-- ======= SECTION 1: PURPOSE ======= -->
+        <section class="mission-block">
+            <div class="mission-icon">🌐</div>
+            <div class="mission-text">
+                <h2>How We Address the Social Challenge</h2>
+                <p>
+                    Vaccination hesitancy and misinformation are growing global concerns. ImmuniData tackles this by
+                    presenting WHO immunisation data in a clear, visual, and unbiased way — helping users make
+                    informed decisions about their health and the health of their communities.
+                </p>
+                <p>
+                    We believe that access to transparent, well-presented data is the first step toward stronger
+                    public health outcomes. Our platform removes the barrier between raw data and real understanding.
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ======= SECTION 2: HOW TO USE ======= -->
+        <section class="how-to-section">
+            <h2 class="section-heading">How to Use This Site</h2>
+            <div class="how-to-grid">
+
+                <div class="how-card">
+                    <div class="how-number">01</div>
+                    <h3>Explore the Landing Page</h3>
+                    <p>Get a quick snapshot of global vaccination data — total doses, countries tracked, and diseases covered.</p>
+                </div>
+
+                <div class="how-card">
+                    <div class="how-number">02</div>
+                    <h3>Check Disease Trends</h3>
+                    <p>View how infectious disease cases have changed over time across regions and countries.</p>
+                </div>
+
+                <div class="how-card">
+                    <div class="how-number">03</div>
+                    <h3>Compare Vaccination Rates</h3>
+                    <p>Filter and sort vaccination coverage data by country, region, antigen type, and year.</p>
+                </div>
+
+                <div class="how-card">
+                    <div class="how-number">04</div>
+                    <h3>Analyse Infection by Economy</h3>
+                    <p>Understand how a country's economic status relates to its infection rates per 100,000 people.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ======= SECTION 3: PERSONAS (from DB) ======= -->
+        <section>
+            <h2 class="section-heading">Who This Site Is For</h2>
+            <p class="section-sub-text">The following personas represent our target user groups. They were identified through secondary user research and guide every design decision on this platform.</p>
+
+            <div class="persona-grid">
+                {% for p in personas %}
+                <div class="persona-card">
+
+                    <div class="persona-info">
+                        <!-- Avatar with real image -->
+                        {% if p['name'] == 'Emily Smith' %}
+                        <img src="{{ url_for('static', filename='personas1.png') }}"
+                             alt="Emily Smith" class="persona-img">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='personas2.png') }}"
+                             alt="Dr. Michael Chen" class="persona-img">
+                        {% endif %}
+
+                        <div>
+                            <h3 class="persona-name">{{ p['name'] }}</h3>
+                            <p class="persona-role">{{ p['role'] }}</p>
+                            <div class="persona-badges">
+                                <span class="badge">Age {{ p['age'] }}</span>
+                                <span class="badge">{{ p['tech_proficiency'] }} Tech Skills</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="persona-details">
+                        <!-- Goals -->
+                        <div class="detail-block">
+                            <h4>🎯 Goals</h4>
+                            <ul>
+                                {% for goal in p['goals'].split(';') %}
+                                <li>{{ goal.strip() }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Pain Points -->
+                        <div class="detail-block">
+                            <h4>⚡ Pain Points</h4>
+                            <ul>
+                                {% for point in p['pain_points'].split(';') %}
+                                <li>{{ point.strip() }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ======= SECTION 4: TEAM (from DB) ======= -->
+        <section class="team-section">
+            <h2 class="section-heading">Project Team</h2>
+            <p class="section-sub-text">This project was developed as part of RMIT Python Programming Studio (COSC3107/3108).</p>
+
+            <div class="team-table-wrap table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Student Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in team %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ member['full_name'] }}</td>
+                            <td>{{ member['student_number'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div><!-- end page-content -->
+
+
+    <!-- ======= RELATED PAGES ======= -->
+    <section class="related-section">
+        <div class="related-inner">
+            <span class="related-label">🔗 Explore Related Pages</span>
+            <div class="related-links">
+                <a href="/vaccination-rates" class="related-btn">Vaccination Rates →</a>
+                <a href="/infection-by-economy" class="related-btn">Disease Comparison →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FOOTER ======= -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="logo-text">🧬 ImmuniData</span>
+            <p>Data sourced from WHO Global Immunisation Records · Built for RMIT Python Programming Studio</p>
+        </div>
+    </footer>
+
+</body>
+</html>
