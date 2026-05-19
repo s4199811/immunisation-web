@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infection by Economy – ImmuniData</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ======= NAVBAR ======= -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">🧬</span>
+                <span class="logo-text">ImmuniData</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/above-average">Disease Trends</a></li>
+                <li><a href="/mission">Public Health Insights</a></li>
+                <li><a href="/infection-by-economy" class="active">Disease Comparison</a></li>
+                <li><a href="/vaccination-rates">Vaccination Coverage</a></li>
+                <li><a href="/mission">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ======= HERO BANNER ======= -->
+    <section class="page-header">
+        <h1>Infection by Economy</h1>
+        <p>Explore how a country's economic status relates to its infectious disease burden, measured per 100,000 people.</p>
+    </section>
+
+    <div class="page-content">
+
+        <!-- ======= FILTER FORM ======= -->
+        <section>
+            <h2 class="section-heading">🔍 Filter Data</h2>
+            <p class="section-sub-text">
+                Select a disease, year, and optionally an economic group to explore infection rates.
+            </p>
+
+            <form class="filter-form" method="GET" action="/infection-by-economy">
+
+                <!-- Dropdown: Disease -->
+                <div class="form-group">
+                    <label for="inf_type">Disease</label>
+                    <select name="inf_type" id="inf_type">
+                        {% for t in inf_types %}
+                        <option value="{{ t['id'] }}"
+                            {% if t['id'] == sel_inf_type %}selected{% endif %}>
+                            {{ t['description'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: Year -->
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <select name="year" id="year">
+                        {% for y in years %}
+                        <option value="{{ y }}"
+                            {% if y == sel_year %}selected{% endif %}>
+                            {{ y }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: Economy (optional) -->
+                <div class="form-group">
+                    <label for="economy">Economic Group (Optional)</label>
+                    <select name="economy" id="economy">
+                        <option value="">All Groups</option>
+                        {% for e in economies %}
+                        <option value="{{ e['economyID'] }}"
+                            {% if e['economyID']|string == sel_economy %}selected{% endif %}>
+                            {{ e['phase'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filter">Apply Filter</button>
+
+            </form>
+        </section>
+
+        <!-- ======= RESULTS SUMMARY ======= -->
+        <div class="results-summary">
+            <span class="results-badge">
+                {{ country_rows | length }} countries found
+            </span>
+            <span class="results-context">
+                for <strong>{{ sel_inf_type }}</strong> in <strong>{{ sel_year }}</strong>
+                {% if sel_economy %} · Economy group filtered{% endif %}
+            </span>
+        </div>
+
+        <!-- ======= TABLE 1: Per-country infection rate ======= -->
+        <section>
+            <h2 class="section-heading">🦠 Infection Rate by Country</h2>
+            <p class="section-sub-text">
+                Cases per 100,000 people for each country, sorted from highest to lowest.
+                This normalised rate allows fair comparison between large and small countries.
+            </p>
+
+            {% if country_rows %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Country</th>
+                            <th>Economic Group</th>
+                            <th>Year</th>
+                            <th>Total Cases</th>
+                            <th>Population</th>
+                            <th>Cases per 100k</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in country_rows %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ row['country'] }}</strong></td>
+                            <td>
+                                <span class="economy-tag econ-{{ row['economy'] | replace(' ', '-') | lower }}">
+                                    {{ row['economy'] }}
+                                </span>
+                            </td>
+                            <td>{{ row['year'] }}</td>
+                            <td>{{ "{:,.0f}".format(row['cases']) }}</td>
+                            <td>{{ "{:,.0f}".format(row['population']) }}</td>
+                            <td>
+                                <span class="per100k-badge
+                                    {% if row['per_100k'] >= 10 %}rate-high
+                                    {% elif row['per_100k'] >= 1 %}rate-mid
+                                    {% else %}rate-low{% endif %}">
+                                    {{ row['per_100k'] }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔎</div>
+                <p>No data found for the selected filters.</p>
+                <p class="empty-hint">Try selecting a different disease, year, or removing the economy filter.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ======= TABLE 2: Economy group summary ======= -->
+        <section>
+            <h2 class="section-heading">💰 Summary by Economic Group</h2>
+            <p class="section-sub-text">
+                Total cases and average infection rate grouped by economic status.
+                Lower income groups typically show higher infection burden per 100,000 people.
+            </p>
+
+            {% if economy_summary %}
+            <div class="table-wrap" style="max-width: 700px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Economic Group</th>
+                            <th>Countries</th>
+                            <th>Total Cases</th>
+                            <th>Avg Cases per 100k</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in economy_summary %}
+                        <tr>
+                            <td>
+                                <span class="economy-tag econ-{{ row['economy'] | replace(' ', '-') | lower }}">
+                                    {{ row['economy'] }}
+                                </span>
+                            </td>
+                            <td>{{ row['num_countries'] }}</td>
+                            <td>{{ "{:,.0f}".format(row['total_cases']) }}</td>
+                            <td>
+                                <span class="per100k-badge
+                                    {% if row['avg_per_100k'] >= 10 %}rate-high
+                                    {% elif row['avg_per_100k'] >= 1 %}rate-mid
+                                    {% else %}rate-low{% endif %}">
+                                    {{ row['avg_per_100k'] }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">💰</div>
+                <p>No economy summary available for the selected filters.</p>
+            </div>
+            {% endif %}
+
+        </section>
+
+    </div><!-- end page-content -->
+
+
+    <!-- ======= RELATED PAGES ======= -->
+    <section class="related-section">
+        <div class="related-inner">
+            <span class="related-label">🔗 Explore Related Pages</span>
+            <div class="related-links">
+                <a href="/above-average" class="related-btn">Above Average Infection →</a>
+                <a href="/biggest-improvement" class="related-btn">Biggest Improvement →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FOOTER ======= -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="logo-text">🧬 ImmuniData</span>
+            <p>Data sourced from WHO Global Immunisation Records · Built for RMIT Python Programming Studio</p>
+        </div>
+    </footer>
+
+</body>
+</html>

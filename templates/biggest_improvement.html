@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biggest Improvement – ImmuniData</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ======= NAVBAR ======= -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <span class="logo-icon">🧬</span>
+                <span class="logo-text">ImmuniData</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/biggest-improvement" class="active">Disease Trends</a></li>
+                <li><a href="/mission">Public Health Insights</a></li>
+                <li><a href="/infection-by-economy">Disease Comparison</a></li>
+                <li><a href="/vaccination-rates">Vaccination Coverage</a></li>
+                <li><a href="/mission">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ======= HERO BANNER ======= -->
+    <section class="page-header">
+        <h1>Biggest Vaccination Improvement</h1>
+        <p>Discover which countries have made the greatest progress in vaccination coverage between two selected years.</p>
+    </section>
+
+    <div class="page-content">
+
+        <!-- ======= FILTER FORM ======= -->
+        <section>
+            <h2 class="section-heading">🔍 Configure Analysis</h2>
+            <p class="section-sub-text">
+                Select a vaccine, a start and end year, and how many top countries to display.
+            </p>
+
+            <form class="filter-form" method="GET" action="/biggest-improvement">
+
+                <!-- Dropdown: Antigen -->
+                <div class="form-group">
+                    <label for="antigen">Vaccine (Antigen)</label>
+                    <select name="antigen" id="antigen">
+                        {% for a in antigens %}
+                        <option value="{{ a['AntigenID'] }}"
+                            {% if a['AntigenID'] == sel_antigen %}selected{% endif %}>
+                            {{ a['name'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: Start Year -->
+                <div class="form-group">
+                    <label for="start_year">Start Year</label>
+                    <select name="start_year" id="start_year">
+                        {% for y in years %}
+                        <option value="{{ y }}"
+                            {% if y == sel_start_year %}selected{% endif %}>
+                            {{ y }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Dropdown: End Year -->
+                <div class="form-group">
+                    <label for="end_year">End Year</label>
+                    <select name="end_year" id="end_year">
+                        {% for y in years | reverse %}
+                        <option value="{{ y }}"
+                            {% if y == sel_end_year %}selected{% endif %}>
+                            {{ y }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Input: Top N -->
+                <div class="form-group">
+                    <label for="top_n">Show Top</label>
+                    <select name="top_n" id="top_n">
+                        {% for n in [5, 10, 15, 20, 50] %}
+                        <option value="{{ n }}"
+                            {% if n == sel_top_n %}selected{% endif %}>
+                            Top {{ n }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filter">Analyse →</button>
+
+            </form>
+        </section>
+
+        <!-- ======= ERROR MESSAGE ======= -->
+        {% if error_msg %}
+        <div class="error-banner">
+            ⚠️ {{ error_msg }}
+        </div>
+        {% endif %}
+
+        <!-- ======= RESULTS ======= -->
+        {% if not error_msg %}
+
+        <!-- Summary bar -->
+        <div class="results-summary">
+            <span class="results-badge">
+                {{ results | length }} countries found
+            </span>
+            <span class="results-context">
+                Top {{ sel_top_n }} most improved for
+                <strong>{{ sel_antigen }}</strong>
+                from <strong>{{ sel_start_year }}</strong>
+                to <strong>{{ sel_end_year }}</strong>
+            </span>
+        </div>
+
+        <!-- ======= TABLE: Top improvers ======= -->
+        <section>
+            <h2 class="section-heading">🏆 Top Countries by Improvement</h2>
+            <p class="section-sub-text">
+                Ranked by percentage point increase in vaccination coverage between the two selected years.
+                Only countries with positive improvement are shown.
+            </p>
+
+            {% if results %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Country</th>
+                            <th>Coverage in {{ sel_start_year }}</th>
+                            <th>Coverage in {{ sel_end_year }}</th>
+                            <th>Improvement (pp)</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in results %}
+                        <tr>
+                            <td>
+                                {% if loop.index == 1 %}🥇
+                                {% elif loop.index == 2 %}🥈
+                                {% elif loop.index == 3 %}🥉
+                                {% else %}{{ loop.index }}{% endif %}
+                            </td>
+                            <td><strong>{{ row['country'] }}</strong></td>
+                            <td>
+                                <span class="pct-badge
+                                    {% if row['start_pct'] >= 90 %}pct-green
+                                    {% elif row['start_pct'] >= 50 %}pct-blue
+                                    {% else %}pct-yellow{% endif %}">
+                                    {{ row['start_pct'] }}%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="pct-badge
+                                    {% if row['end_pct'] >= 90 %}pct-green
+                                    {% elif row['end_pct'] >= 50 %}pct-blue
+                                    {% else %}pct-yellow{% endif %}">
+                                    {{ row['end_pct'] }}%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="improvement-badge
+                                    {% if row['improvement'] >= 50 %}impr-high
+                                    {% elif row['improvement'] >= 20 %}impr-mid
+                                    {% else %}impr-low{% endif %}">
+                                    +{{ row['improvement'] }}pp
+                                </span>
+                            </td>
+                            <td>
+                                <!-- Progress bar -->
+                                <div class="progress-wrap">
+                                    <div class="progress-bar"
+                                         style="width: {{ [row['end_pct'], 100] | min }}%">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📊</div>
+                <p>No improvement data found for the selected filters.</p>
+                <p class="empty-hint">Try a wider year range or a different antigen.</p>
+            </div>
+            {% endif %}
+
+        </section>
+        {% endif %}
+
+    </div><!-- end page-content -->
+
+
+    <!-- ======= RELATED PAGES ======= -->
+    <section class="related-section">
+        <div class="related-inner">
+            <span class="related-label">🔗 Explore Related Pages</span>
+            <div class="related-links">
+                <a href="/vaccination-rates" class="related-btn">Vaccination Rates →</a>
+                <a href="/infection-by-economy" class="related-btn">Compare by Economy →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FOOTER ======= -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="logo-text">🧬 ImmuniData</span>
+            <p>Data sourced from WHO Global Immunisation Records · Built for RMIT Python Programming Studio</p>
+        </div>
+    </footer>
+
+</body>
+</html>
